@@ -46,7 +46,6 @@ public:
 	
 	FWorldMapTileInfo* TileInfo = nullptr;
 	/*
-	virtual float GetFCost() const;
 	virtual float GetGCost() const;
 	virtual float GetHCost() const;
 	virtual bool IsWalkable() const;

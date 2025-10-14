@@ -12,9 +12,9 @@ struct FPathNode : public IHeapElement
 public:
 	virtual ~FPathNode() = default;
 
-	virtual float GetFCost() const;
-	virtual float GetGCost() const;
-	virtual float GetHCost() const;
+	virtual float GetFCost() const; /* Total cost */
+	virtual float GetGCost() const; /* Cost from start node */
+	virtual float GetHCost() const; /* Heuristic cost to end node */
 	virtual bool IsWalkable() const;
 	virtual float GetDistanceToNode(const FPathNode& Other) const;
 	

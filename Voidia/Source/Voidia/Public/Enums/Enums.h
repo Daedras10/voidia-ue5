@@ -16,6 +16,7 @@ enum class ETileListType : uint8
 	TLT_Sand			UMETA(DisplayName = "Sand"),
 	TLT_Swamp			UMETA(DisplayName = "Swamp"),
 	TLT_Forest			UMETA(DisplayName = "Forest"),
+	TLT_Road			UMETA(DisplayName = "Road"),
 };
 
 UENUM(Blueprintable)
@@ -29,6 +30,7 @@ enum class ETileBaseType : uint8
 	TBT_Swamp			UMETA(DisplayName = "Swamp"),
 	TBT_Forest			UMETA(DisplayName = "Forest"),
 	TBT_Snow			UMETA(DisplayName = "Snow"),
+	TBT_Road			UMETA(DisplayName = "Road"),
 };
 
 UENUM(Blueprintable)
