@@ -35,10 +35,6 @@ public:
 //18:30
 };
 
-struct FWorldMapPathNode : public FPathNode
-{
-};
-
 
 template<typename T>
 struct TFHeap

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "PathfindingStructs.h"
 #include "Enums/Enums.h"
 #include "WorldGenerationStructs.generated.h"
 
@@ -37,3 +38,18 @@ public:
 	ETileLayer Layer = ETileLayer::TL_Floor;
 };
 
+
+struct FWorldMapPathNode : public FPathNode
+{
+public:
+	FWorldMapPathNode(const FWorldMapTileInfo* InTileInfo, TArray<TArray<FWorldMapTileInfo>>* InMap);
+	
+	FWorldMapTileInfo* TileInfo = nullptr;
+	/*
+	virtual float GetFCost() const;
+	virtual float GetGCost() const;
+	virtual float GetHCost() const;
+	virtual bool IsWalkable() const;
+	virtual float GetDistanceToNode(const FPathNode& Other) const;
+	 */
+};

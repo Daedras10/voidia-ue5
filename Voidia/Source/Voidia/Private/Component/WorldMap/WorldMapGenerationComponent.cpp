@@ -4,6 +4,7 @@
 #include "Component/WorldMap/WorldMapGenerationComponent.h"
 
 #include "PaperTileLayer.h"
+#include "BlueprintFunctionLibraries/GenericBlueprintFunctionLibrary.h"
 #include "WorldMap/WorldMap.h"
 #include "DataAsset/WorldMap/TileInfoDataAsset.h"
 #include "WorldMap/MapInteractable/WorldMapCity.h"
@@ -435,6 +436,8 @@ void UWorldMapGenerationComponent::PlaceCities(UPaperTileMapComponent* TileMapRe
 
 	TArray<FIntVector2> ExistingCityLocations = {};
 	TArray<FIntVector2> ExistingVillageLocations = {};
+
+	TMap<AWorldMapCity*, TArray<AWorldMapCity*>> VillagesByCity = {};
 	
 	for (int i = 0; i < NumberOfCities; i++)
 	{
@@ -464,11 +467,38 @@ void UWorldMapGenerationComponent::PlaceCities(UPaperTileMapComponent* TileMapRe
 		City->SetTileLocation(X, Y);
 
 		City->SetAsCity();
+		VillagesByCity.Add(City, {});
+
+
+		/* Link to other cities */
+		const auto ThisCityLocation = FIntVector2(X, Y);
+		for (int CurrentCity = 0; CurrentCity < ExistingCityLocations.Num() - 1; CurrentCity++)
+		{
+			const auto OtherCityLocation = ExistingCityLocations[CurrentCity];
+
+			/*
+			* const TArray<FPathNode*>& Grid,
+			* const FIntVector Size,
+			* const FPathNode* StartNode,
+			* const FPathNode* EndNode
+			 */
+			
+			//const auto Path = UGenericBlueprintFunctionLibrary::FindPath(
+			//GeneratePathBetweenTwoPoints(TileMapRef, ThisCityLocation, OtherCityLocation);
+		}
+		
+
+		//FindPath(const TArray<FPathNode*>& Grid, const FIntVector Size, const FPathNode* StartNode, const FPathNode* EndNode)
 	}
 
+	
 	for (const auto ExistingCity : ExistingCityLocations)
 	{
 		const auto VillageCount = FMath::RandRange(MinVillagePerCity, MaxVillagePerCity);
+		const auto OwningCityTileArray = OwningWorldMap->GetWorldMapTiles();
+		const auto OwningCityTile = &(*OwningCityTileArray)[ExistingCity.X][ExistingCity.Y];
+		const auto OwningCity = Cast<AWorldMapCity>(OwningCityTile->MapInteractablesOnTile[0]);
+		
 		for (int i = 0; i < VillageCount; i++)
 		{
 			int X = FMath::RandRange(ExistingCity.X - VillageDistanceFromCity, ExistingCity.X + VillageDistanceFromCity);
@@ -487,14 +517,15 @@ void UWorldMapGenerationComponent::PlaceCities(UPaperTileMapComponent* TileMapRe
 			FActorSpawnParameters SpawnParams;
 			const auto Transform = FTransform(FRotator::ZeroRotator, FVector::Zero(), FVector(0.15625f, 0.15625f, 0.15625f));
 			AActor* Actor = GetWorld()->SpawnActor(ClassType, &Transform, SpawnParams);
-			const auto City = Cast<AWorldMapCity>(Actor);
-			if (!City) continue;
+			const auto Village = Cast<AWorldMapCity>(Actor);
+			if (!Village) continue;
 
-			Tile->MapInteractablesOnTile.Add(City);
+			Tile->MapInteractablesOnTile.Add(Village);
 			ExistingVillageLocations.Add(FIntVector2(X, Y));
-			City->SetTileLocation(X, Y);
+			Village->SetTileLocation(X, Y);
 
-			City->SetAsVillage();
+			Village->SetAsVillage();
+			VillagesByCity[OwningCity].Add(Village);
 		}
 	}
 }
